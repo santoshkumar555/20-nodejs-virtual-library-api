@@ -1,0 +1,550 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <link rel="stylesheet" href="style.css" />
+        <title>API Tester - Library Management</title>
+    </head>
+    <body>
+        <div class="container">
+            <h1>Library API Tester</h1>
+
+            <div class="token-box">
+                <h3>Token Management</h3>
+                <p style="margin-bottom: 10px; color: #aaa">
+                    <strong>Current Token:</strong>
+                    <span id="tokenStatus">No token stored</span>
+                </p>
+                <input
+                    type="text"
+                    id="tokenInput"
+                    placeholder="Enter token manually or auto-loaded from OTP verification"
+                />
+                <button class="btn btn-save" onclick="saveToken()">
+                    Save Token
+                </button>
+                <button class="btn btn-load" onclick="loadToken()">
+                    Load from Storage
+                </button>
+                <button class="btn btn-clear" onclick="clearToken()">
+                    Clear Token
+                </button>
+            </div>
+
+            <nav class="nav">
+                <button class="nav-btn active" onclick="showSection('auth')">
+                    Auth
+                </button>
+                <button class="nav-btn" onclick="showSection('user')">
+                    User Profile
+                </button>
+                <button class="nav-btn" onclick="showSection('authors')">
+                    Authors
+                </button>
+                <button class="nav-btn" onclick="showSection('books')">
+                    Books
+                </button>
+            </nav>
+
+            <div id="auth" class="section tab-content active">
+                <h2>Authentication</h2>
+
+                <h3>Send OTP (via Email)</h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                id="sendOtpEmail"
+                                placeholder="test@example.com"
+                            />
+                        </div>
+                        <button class="btn btn-primary" onclick="sendOtp()">
+                            Send OTP
+                        </button>
+                    </div>
+                </div>
+                <div id="sendOtpResponse" class="response-box"></div>
+
+                <h3>Verify OTP</h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                id="verifyOtpEmail"
+                                placeholder="test@example.com"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>OTP Code</label>
+                            <input
+                                type="text"
+                                id="verifyOtpCode"
+                                placeholder="123456"
+                            />
+                        </div>
+                        <button class="btn btn-success" onclick="verifyOtp()">
+                            Verify & Get Token
+                        </button>
+                    </div>
+                </div>
+                <div id="verifyOtpResponse" class="response-box"></div>
+
+                <h3>Register</h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Phone Number</label>
+                            <input
+                                type="text"
+                                id="regPhone"
+                                placeholder="+1234567890"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                id="regEmail"
+                                placeholder="test@example.com"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Password</label>
+                            <div class="password-wrapper">
+                                <input
+                                    type="password"
+                                    id="regPassword"
+                                    placeholder="Password"
+                                />
+                                <button
+                                    type="button"
+                                    class="password-toggle"
+                                    onclick="
+                                        togglePasswordVisibility(
+                                            'regPassword',
+                                            this,
+                                        )
+                                    "
+                                >
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        width="20"
+                                        height="20"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        stroke-width="2"
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        class="eye-icon"
+                                    >
+                                        <path
+                                            d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"
+                                        ></path>
+                                        <circle cx="12" cy="12" r="3"></circle>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                id="regName"
+                                placeholder="John Doe"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Role</label>
+                            <select id="regRole">
+                                <option value="user">User</option>
+                                <option value="author">Author</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                        <button class="btn btn-primary" onclick="register()">
+                            Register
+                        </button>
+                    </div>
+                </div>
+                <div id="registerResponse" class="response-box"></div>
+
+                <h3>Check Email</h3>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        id="checkEmail"
+                        placeholder="test@example.com"
+                    />
+                </div>
+                <button class="btn btn-info" onclick="checkEmail()">
+                    Check Email
+                </button>
+                <div id="checkEmailResponse" class="response-box"></div>
+
+                <h3>Forgot Password</h3>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input
+                        type="email"
+                        id="forgotEmail"
+                        placeholder="test@example.com"
+                    />
+                </div>
+                <button class="btn btn-warning" onclick="forgotPassword()">
+                    Send Reset Link
+                </button>
+                <div id="forgotPasswordResponse" class="response-box"></div>
+            </div>
+
+            <div id="user" class="section tab-content auth-required">
+                <h2>
+                    User Profile <span class="auth-badge">Auth Required</span>
+                </h2>
+
+                <h3>Get My Profile</h3>
+                <button class="btn btn-primary" onclick="getMe()">
+                    Get Profile
+                </button>
+                <div id="getMeResponse" class="response-box"></div>
+
+                <h3>Update Profile</h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                id="updateName"
+                                placeholder="New Name"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input
+                                type="email"
+                                id="updateEmail"
+                                placeholder="newemail@example.com"
+                            />
+                        </div>
+                        <button
+                            class="btn btn-success"
+                            onclick="updateProfile()"
+                        >
+                            Update Profile
+                        </button>
+                    </div>
+                </div>
+                <div id="updateProfileResponse" class="response-box"></div>
+
+                <h3>Logout</h3>
+                <button class="btn btn-danger" onclick="logout()">
+                    Logout
+                </button>
+                <div id="logoutResponse" class="response-box"></div>
+
+                <h3>Delete My Account</h3>
+                <button class="btn btn-danger" onclick="deleteMe()">
+                    Delete Account
+                </button>
+                <div id="deleteMeResponse" class="response-box"></div>
+            </div>
+
+            <div id="authors" class="section tab-content">
+                <h2>Authors</h2>
+
+                <h3>Get All Authors</h3>
+                <button class="btn btn-primary" onclick="getAllAuthors()">
+                    Get Authors
+                </button>
+                <div id="authorsList" style="margin-top: 15px"></div>
+                <div id="getAllAuthorsResponse" class="response-box"></div>
+
+                <h3>Get Author by ID</h3>
+                <div class="form-group">
+                    <label>Author ID</label>
+                    <input
+                        type="text"
+                        id="getAuthorId"
+                        placeholder="Author ID"
+                    />
+                </div>
+                <button class="btn btn-info" onclick="getAuthorById()">
+                    Get Author
+                </button>
+                <div id="getAuthorByIdResponse" class="response-box"></div>
+
+                <h3>
+                    Create Author <span class="auth-badge">Auth Required</span>
+                </h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                id="createAuthorName"
+                                placeholder="Author Name"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Bio</label>
+                            <textarea
+                                id="createAuthorBio"
+                                placeholder="Author bio..."
+                            ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <input
+                                type="text"
+                                id="createAuthorCountry"
+                                placeholder="Country"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Birth Year</label>
+                            <input
+                                type="number"
+                                id="createAuthorBirthYear"
+                                placeholder="1990"
+                            />
+                        </div>
+                        <button
+                            class="btn btn-success"
+                            onclick="createAuthor()"
+                        >
+                            Create Author
+                        </button>
+                    </div>
+                </div>
+                <div id="createAuthorResponse" class="response-box"></div>
+
+                <h3>
+                    Update Author <span class="auth-badge">Auth Required</span>
+                </h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Author ID</label>
+                            <input
+                                type="text"
+                                id="updateAuthorId"
+                                placeholder="Author ID"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input
+                                type="text"
+                                id="updateAuthorName"
+                                placeholder="New Name"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Bio</label>
+                            <textarea
+                                id="updateAuthorBio"
+                                placeholder="New bio..."
+                            ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Country</label>
+                            <input
+                                type="text"
+                                id="updateAuthorCountry"
+                                placeholder="Country"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Birth Year</label>
+                            <input
+                                type="number"
+                                id="updateAuthorBirthYear"
+                                placeholder="1990"
+                            />
+                        </div>
+                        <button
+                            class="btn btn-warning"
+                            onclick="updateAuthor()"
+                        >
+                            Update Author
+                        </button>
+                    </div>
+                </div>
+                <div id="updateAuthorResponse" class="response-box"></div>
+
+                <h3>
+                    Delete Author <span class="auth-badge">Auth Required</span>
+                </h3>
+                <div class="form-group">
+                    <label>Author ID</label>
+                    <input
+                        type="text"
+                        id="deleteAuthorId"
+                        placeholder="Author ID"
+                    />
+                </div>
+                <button class="btn btn-danger" onclick="deleteAuthor()">
+                    Delete Author
+                </button>
+                <div id="deleteAuthorResponse" class="response-box"></div>
+            </div>
+
+            <div id="books" class="section tab-content">
+                <h2>Books</h2>
+
+                <h3>Get All Books</h3>
+                <button class="btn btn-primary" onclick="getAllBooks()">
+                    Get Books
+                </button>
+                <div id="booksList" style="margin-top: 15px"></div>
+                <div id="getAllBooksResponse" class="response-box"></div>
+
+                <h3>Get Book by ID</h3>
+                <div class="form-group">
+                    <label>Book ID</label>
+                    <input type="text" id="getBookId" placeholder="Book ID" />
+                </div>
+                <button class="btn btn-info" onclick="getBookById()">
+                    Get Book
+                </button>
+                <div id="getBookByIdResponse" class="response-box"></div>
+
+                <h3>
+                    Create Book <span class="auth-badge">Auth Required</span>
+                </h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input
+                                type="text"
+                                id="createBookTitle"
+                                placeholder="Book Title"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea
+                                id="createBookDescription"
+                                placeholder="Book description..."
+                            ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>ISBN</label>
+                            <input
+                                type="text"
+                                id="createBookIsbn"
+                                placeholder="978-0-123456-78-9"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input
+                                type="number"
+                                id="createBookPrice"
+                                placeholder="19.99"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Author ID</label>
+                            <input
+                                type="text"
+                                id="createBookAuthorId"
+                                placeholder="Author ID"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Cover Image</label>
+                            <input
+                                type="file"
+                                id="createBookCover"
+                                accept="image/*"
+                            />
+                        </div>
+                        <button class="btn btn-success" onclick="createBook()">
+                            Create Book
+                        </button>
+                    </div>
+                </div>
+                <div id="createBookResponse" class="response-box"></div>
+
+                <h3>
+                    Update Book <span class="auth-badge">Auth Required</span>
+                </h3>
+                <div class="grid">
+                    <div>
+                        <div class="form-group">
+                            <label>Book ID</label>
+                            <input
+                                type="text"
+                                id="updateBookId"
+                                placeholder="Book ID"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Title</label>
+                            <input
+                                type="text"
+                                id="updateBookTitle"
+                                placeholder="New Title"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <textarea
+                                id="updateBookDescription"
+                                placeholder="New description..."
+                            ></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input
+                                type="number"
+                                id="updateBookPrice"
+                                placeholder="24.99"
+                            />
+                        </div>
+                        <div class="form-group">
+                            <label>Cover Image</label>
+                            <input
+                                type="file"
+                                id="updateBookCover"
+                                accept="image/*"
+                            />
+                        </div>
+                        <button class="btn btn-warning" onclick="updateBook()">
+                            Update Book
+                        </button>
+                    </div>
+                </div>
+                <div id="updateBookResponse" class="response-box"></div>
+
+                <h3>
+                    Delete Book <span class="auth-badge">Auth Required</span>
+                </h3>
+                <div class="form-group">
+                    <label>Book ID</label>
+                    <input
+                        type="text"
+                        id="deleteBookId"
+                        placeholder="Book ID"
+                    />
+                </div>
+                <button class="btn btn-danger" onclick="deleteBook()">
+                    Delete Book
+                </button>
+                <div id="deleteBookResponse" class="response-box"></div>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </body>
+</html>
